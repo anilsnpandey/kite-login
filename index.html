@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<title>Kite login</title>
+<style>
+  :root { --bg: #ECEFF3; --ink: #15212C; --muted: #586877; --accent: #1D4F91; --card: #FFFFFF; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #0E141A; --ink: #E5EBF1; --muted: #92A2B1; --accent: #7DAEEE; --card: #161F28; } }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 520px; margin: 40px auto; padding: 0 16px; }
+  .card { background: var(--card); border-radius: 10px; padding: 20px; }
+  h1 { font-size: 22px; margin: 0 0 8px; }
+  p { color: var(--muted); }
+  a.btn { display: inline-block; margin-top: 8px; padding: 12px 20px; border-radius: 8px; background: var(--accent); color: #fff; text-decoration: none; font-weight: 600; }
+  code { font-size: 15px; word-break: break-all; background: var(--bg); padding: 2px 6px; border-radius: 4px; color: var(--ink); }
+</style>
+</head>
+<body>
+<main><div class="card">
+  <h1 id="h">Finishing the Kite login…</h1>
+  <p id="p"></p>
+  <p><a class="btn" id="a" hidden>Open Telegram</a></p>
+  <p id="f" hidden></p>
+</div></main>
+<script>
+// Kite sends the browser here after the daily login with a one-time code (request_token). This page hands that code to
+// the Ranking Trader's Telegram bot (a "START" link); the bot finishes the login on the server. The code alone is
+// useless: turning it into a login needs the app's secret key, which exists only on the server. Nothing is stored here.
+(() => {
+  const BOT = "";                                   // the Telegram bot's username, without @
+  const $ = id => document.getElementById(id);
+  const q = new URLSearchParams(location.search), t = q.get("request_token") || "";
+  history.replaceState(null, "", location.pathname); // the code does not stay in the browser history
+  if (q.get("status") !== "success" || !/^[A-Za-z0-9]{8,64}$/.test(t)) {
+    $("h").textContent = "Kite login did not finish";
+    $("p").textContent = "Send /login to your trader bot in Telegram for a fresh link.";
+    return;
+  }
+  $("h").textContent = "One more tap";
+  $("p").textContent = "Telegram opens your trader bot. Tap START there to finish the login.";
+  $("f").hidden = false;
+  $("f").innerHTML = "If Telegram does not open: copy this line and send it to the bot:<br><code>/start " + t + "</code>";
+  if (!BOT) { $("p").textContent = "The bot name is not set on this page yet: copy the line below and send it to your trader bot."; return; }
+  const link = "https://t.me/" + BOT + "?start=" + t;
+  $("a").href = link; $("a").hidden = false; $("a").textContent = "Open Telegram and tap START";
+  setTimeout(() => { location.href = link; }, 400);
+})();
+</script>
+</body>
+</html>
