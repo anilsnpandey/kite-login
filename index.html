@@ -30,7 +30,7 @@
 // the Ranking Trader's Telegram bot (a "START" link); the bot finishes the login on the server. The code alone is
 // useless: turning it into a login needs the app's secret key, which exists only on the server. Nothing is stored here.
 (() => {
-  const BOT = "";                                   // the Telegram bot's username, without @
+  const BOT = "AnilRankingBot";                                 // the Telegram bot's username, without @
   const $ = id => document.getElementById(id);
   const q = new URLSearchParams(location.search), t = q.get("request_token") || "";
   history.replaceState(null, "", location.pathname); // the code does not stay in the browser history
